@@ -1,0 +1,28 @@
+name: Hello world
+
+on:
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check test1 lock
+        id: lock
+        uses: suzuki-shunsuke/lock-action@4a69996f86294a4eacc7450392eb70804b6543c4 # v0.2.0
+        with:
+          mode: check
+          key: test1
+          repo_owner: eftakhairul
+          repo_name: center-lock
+          github_token: ${{ secrets.CENTER_LOCK_TOKEN }}
+
+      - name: Hello world
+        if: steps.lock.outputs.locked != 'true'
+        run: echo "Hello world"
+
+      - name: Skipped because test1 is locked
+        if: steps.lock.outputs.locked == 'true'
+        run: echo "test1 is locked, not printing hello world"
