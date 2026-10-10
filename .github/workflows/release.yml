@@ -1,4 +1,4 @@
-name: Hello world
+name: Release
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
 permissions: {}
 
 jobs:
-  hello:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Check test1 lock
@@ -19,10 +19,10 @@ jobs:
           repo_name: center-lock
           github_token: ${{ secrets.CENTER_LOCK_TOKEN }}
 
-      - name: Hello world
+      - name: Release
         if: steps.lock.outputs.locked != 'true'
-        run: echo "Hello world"
+        run: echo "Released successfully"
 
-      - name: Skipped because test1 is locked
+      - name: Release cancelled
         if: steps.lock.outputs.locked == 'true'
-        run: echo "test1 is locked, not printing hello world"
+        run: echo "Release cancelled"
